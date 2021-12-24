@@ -56,6 +56,7 @@ class OrderController extends Controller
             DB::commit();
             return 'success';
         } catch (\Throwable $th) {
+            DB::rollback();
             return 'error';
         }
         
