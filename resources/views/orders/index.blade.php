@@ -27,53 +27,57 @@
                 </form>
             </div>
         </div>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Customer Name</th>
-                    <th>Total</th>
-                    <th>Received Amount</th>
-                    <th>Status</th>
-                    <th>To Pay</th>
-                    <th>Created At</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($orders as $order)
-                <tr>
-                    <td>{{$order->id}}</td>
-                    <td>{{$order->getCustomerName()}}</td>
-                    <td>{{ config('settings.currency_symbol') }} {{$order->formattedTotal()}}</td>
-                    <td>{{ config('settings.currency_symbol') }} {{$order->formattedReceivedAmount()}}</td>
-                    <td>
-                        @if($order->receivedAmount() == 0)
-                            <span class="badge badge-danger">Not Paid</span>
-                        @elseif($order->receivedAmount() < $order->total())
-                            <span class="badge badge-warning">Partial</span>
-                        @elseif($order->receivedAmount() == $order->total())
-                            <span class="badge badge-success">Paid</span>
-                        @elseif($order->receivedAmount() > $order->total())
-                            <span class="badge badge-info">Change</span>
-                        @endif
-                    </td>
-                    <td>{{config('settings.currency_symbol')}} {{number_format($order->total() - $order->receivedAmount(), 2)}}</td>
-                    <td>{{$order->created_at}}</td>
-                </tr>
-                @endforeach
-            </tbody>
-            <tfoot>
-                <tr>
-                    <th></th>
-                    <th></th>
-                    <th>{{ config('settings.currency_symbol') }} {{ number_format($total, 2) }}</th>
-                    <th>{{ config('settings.currency_symbol') }} {{ number_format($receivedAmount, 2) }}</th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </tfoot>
-        </table>
+        <div class="row">
+            <div class="col-md-12 table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Customer Name</th>
+                            <th>Total</th>
+                            <th>Received Amount</th>
+                            <th>Status</th>
+                            <th>To Pay</th>
+                            <th>Created At</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($orders as $order)
+                        <tr>
+                            <td>{{$order->id}}</td>
+                            <td>{{$order->getCustomerName()}}</td>
+                            <td>{{ config('settings.currency_symbol') }} {{$order->formattedTotal()}}</td>
+                            <td>{{ config('settings.currency_symbol') }} {{$order->formattedReceivedAmount()}}</td>
+                            <td>
+                                @if($order->receivedAmount() == 0)
+                                    <span class="badge badge-danger">Not Paid</span>
+                                @elseif($order->receivedAmount() < $order->total())
+                                    <span class="badge badge-warning">Partial</span>
+                                @elseif($order->receivedAmount() == $order->total())
+                                    <span class="badge badge-success">Paid</span>
+                                @elseif($order->receivedAmount() > $order->total())
+                                    <span class="badge badge-info">Change</span>
+                                @endif
+                            </td>
+                            <td>{{config('settings.currency_symbol')}} {{number_format($order->total() - $order->receivedAmount(), 2)}}</td>
+                            <td>{{$order->created_at}}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th>{{ config('settings.currency_symbol') }} {{ number_format($total, 2) }}</th>
+                            <th>{{ config('settings.currency_symbol') }} {{ number_format($receivedAmount, 2) }}</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
         {{ $orders->render() }}
     </div>
 </div>

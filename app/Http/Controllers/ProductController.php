@@ -148,8 +148,8 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        if ($product->image) {
-            Storage::delete($product->image);
+        if ($product->image && $product->image != "" && Storage::disk('do_spaces')->exists($product->image)) {
+            Storage::disk('do_spaces')->delete($product->image);
         }
         $product->delete();
 
