@@ -144,8 +144,8 @@ class Cart extends Component {
     handleClickSubmit() {
         Swal.fire({
             title: 'Received Amount',
-            input: 'text',
-            inputValue: this.getTotal(this.state.cart),
+            input: 'number',
+            inputValue: this.getTotal(this.state.cart).replace(/\./g, ""),
             showCancelButton: true,
             confirmButtonText: 'Send',
             showLoaderOnConfirm: true,

@@ -39,7 +39,7 @@
             <div class="form-group">
                 <label for="image">Image</label>
                 <div class="custom-file">
-                    <input type="file" class="custom-file-input" name="image" id="image">
+                    <input type="file" class="custom-file-input" name="image" id="image" accept="image/*">
                     <label class="custom-file-label" for="image">Choose file</label>
                 </div>
                 @error('image')
@@ -62,7 +62,7 @@
 
             <div class="form-group">
                 <label for="price">Price</label>
-                <input type="text" name="price" class="form-control @error('price') is-invalid @enderror" id="price"
+                <input type="number" name="price" class="form-control @error('price') is-invalid @enderror" id="price"
                     placeholder="price" value="{{ old('price', $product->price) }}">
                 @error('price')
                 <span class="invalid-feedback" role="alert">

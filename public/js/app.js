@@ -69681,8 +69681,8 @@ var Cart = /*#__PURE__*/function (_Component) {
 
       sweetalert2__WEBPACK_IMPORTED_MODULE_3___default.a.fire({
         title: 'Received Amount',
-        input: 'text',
-        inputValue: this.getTotal(this.state.cart),
+        input: 'number',
+        inputValue: this.getTotal(this.state.cart).replace(/\./g, ""),
         showCancelButton: true,
         confirmButtonText: 'Send',
         showLoaderOnConfirm: true,
