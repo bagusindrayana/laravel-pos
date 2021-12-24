@@ -19,7 +19,7 @@ class CreateProductsTable extends Migration
             $table->text('description')->nullable();
             $table->string('image')->nullable();
             $table->string('barcode')->unique();
-            $table->integer('price', 16)->primary(false);
+            $table->integer('price', 16)->autoIncrement(false);
             $table->boolean('status')->default(true);
             $table->timestamps();
         });

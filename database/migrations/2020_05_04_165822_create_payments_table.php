@@ -15,7 +15,7 @@ class CreatePaymentsTable extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->integer('amount', 16)->primary(false);
+            $table->integer('amount', 16)->autoIncrement(false);
             $table->foreignId('order_id');
             $table->foreignId('user_id');
             $table->timestamps();
