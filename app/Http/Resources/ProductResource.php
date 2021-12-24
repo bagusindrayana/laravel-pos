@@ -17,7 +17,7 @@ class ProductResource extends JsonResource
     {
         return [
             'id'=> $this->id,
-            'name'=> $this->name,
+            'name'=> mb_strimwidth($this->name, 0, 10, "..."),
             'description' => $this->description,
             'image' => $this->image,
             'barcode' => $this->barcode,
@@ -25,7 +25,7 @@ class ProductResource extends JsonResource
             'quantity' => $this->quantity,
             'status' => $this->status,
             'created_at' => $this->created_at,
-            'image_url' => Storage::url($this->image)
+            'image_url' => route('image-products',$this->id)
         ];
     }
 }

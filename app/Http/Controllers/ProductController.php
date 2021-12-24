@@ -7,6 +7,7 @@ use App\Http\Requests\ProductUpdateRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
@@ -49,24 +50,34 @@ class ProductController extends Controller
     {
         $image_path = '';
 
-        if ($request->hasFile('image')) {
-            $image_path = $request->file('image')->store('products', 'public');
-        }
-
-        $product = Product::create([
-            'name' => $request->name,
-            'description' => $request->description,
-            'image' => $image_path,
-            'barcode' => $request->barcode,
-            'price' => $request->price,
-            'quantity' => $request->quantity,
-            'status' => $request->status
-        ]);
-
-        if (!$product) {
+        DB::beginTransaction();
+        try {
+            if ($request->hasFile('image')) {
+                // $image_path = $request->file('image')->store('products', 'public');
+                $file = $request->file('image');
+                $imageName = time().$file->getClientOriginalName();
+                $filePath = "/products/" . $imageName;
+                
+                Storage::disk('do_spaces')->put($filePath, file_get_contents($file));
+                $image_path = $filePath;
+                
+            }
+    
+            $product = Product::create([
+                'name' => $request->name,
+                'description' => $request->description,
+                'image' => $image_path,
+                'barcode' => $request->barcode,
+                'price' => str_replace('.', '', $request->price),
+                'quantity' => $request->quantity,
+                'status' => $request->status
+            ]);
+            DB::commit();
+            return redirect()->route('products.index')->with('success', 'Success, you product have been created.');
+        } catch (\Throwable $th) {
+            DB::rollBack();
             return redirect()->back()->with('error', 'Sorry, there a problem while creating product.');
         }
-        return redirect()->route('products.index')->with('success', 'Success, you product have been created.');
     }
 
     /**
@@ -103,20 +114,25 @@ class ProductController extends Controller
         $product->name = $request->name;
         $product->description = $request->description;
         $product->barcode = $request->barcode;
-        $product->price = $request->price;
+        $product->price = str_replace('.', '', $request->price);
         $product->quantity = $request->quantity;
         $product->status = $request->status;
 
         if ($request->hasFile('image')) {
             // Delete old image
-            if ($product->image) {
-                Storage::delete($product->image);
+            if ($product->image && $product->image != "" && Storage::disk('do_spaces')->exists($product->image)) {
+                Storage::disk('do_spaces')->delete($product->image);
             }
-            // Store image
-            $image_path = $request->file('image')->store('products', 'public');
-            // Save to Database
+            $file = $request->file('image');
+            $imageName = time().$file->getClientOriginalName();
+            $filePath = "/products/" . $imageName;
+            
+            Storage::disk('do_spaces')->put($filePath, file_get_contents($file));
+            $image_path = $filePath;
             $product->image = $image_path;
         }
+
+
 
         if (!$product->save()) {
             return redirect()->back()->with('error', 'Sorry, there\'re a problem while updating product.');

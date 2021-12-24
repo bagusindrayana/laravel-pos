@@ -29,6 +29,10 @@ class Cart extends Component {
         this.handleClickSubmit = this.handleClickSubmit.bind(this)
     }
 
+    numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
     componentDidMount() {
         // load user cart
         this.loadCart();
@@ -99,7 +103,7 @@ class Cart extends Component {
 
     getTotal(cart) {
         const total = cart.map(c => c.pivot.quantity * c.price);
-        return sum(total).toFixed(3);
+        return this.numberWithCommas(sum(total));
     }
     handleClickDelete(product_id) {
         axios
@@ -209,7 +213,7 @@ class Cart extends Component {
                                             <td>{c.name}</td>
                                             <td>
                                                 <input
-                                                    type="text"
+                                                    type="number"
                                                     className="form-control form-control-sm qty"
                                                     value={c.pivot.quantity}
                                                     onChange={event =>
@@ -232,9 +236,9 @@ class Cart extends Component {
                                             </td>
                                             <td className="text-right">
                                                 {window.APP.currency_symbol}{" "}
-                                                {(
+                                                {this.numberWithCommas(
                                                     c.price * c.pivot.quantity
-                                                ).toFixed(2)}
+                                                )}
                                             </td>
                                         </tr>
                                     ))}
@@ -287,7 +291,7 @@ class Cart extends Component {
                             <div
                                 onClick={() => this.addProductToCart(p.barcode)}
                                 key={p.id}
-                                className="item"
+                                className="item p-3"
                             >
                                 <img src={p.image_url} alt="" />
                                 <h5>{p.name}</h5>

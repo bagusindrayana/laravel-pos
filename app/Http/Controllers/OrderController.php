@@ -41,7 +41,7 @@ class OrderController extends Controller
             $cart = $request->user()->cart()->get();
             foreach ($cart as $item) {
                 $order->items()->create([
-                    'price' => $item->price,
+                    'price' => str_replace('.', '', $item->price),
                     'quantity' => $item->pivot->quantity,
                     'product_id' => $item->id,
                 ]);
@@ -50,7 +50,7 @@ class OrderController extends Controller
             }
             $request->user()->cart()->detach();
             $order->payments()->create([
-                'amount' => $request->amount,
+                'amount' => str_replace('.', '', $request->amount),
                 'user_id' => $request->user()->id,
             ]);
             DB::commit();

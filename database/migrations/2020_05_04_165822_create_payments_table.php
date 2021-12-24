@@ -15,7 +15,7 @@ class CreatePaymentsTable extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->decimal('amount', 16, 8);
+            $table->integer('amount', 16)->unique(false);
             $table->foreignId('order_id');
             $table->foreignId('user_id');
             $table->timestamps();

@@ -6,11 +6,25 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SettingController;
+use App\Models\Product;
+use GuzzleHttp\Psr7\MimeType;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 
 Route::get('/', function () {
     return redirect('/admin');
 });
+
+Route::get('/image-products/{id}',function($id){
+    $product = Product::find($id);
+    $file = Storage::disk('do_spaces')->get($product->image);
+    $mimetypes = new MimeType;
+    $mime = $mimetypes->fromExtension($product->image);
+    $headers = [
+        'Content-Type' => $mime,
+    ];
+    return response($file, 200, $headers);
+})->name('image-products');
 
 Auth::routes();
 
